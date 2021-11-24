@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:03:11 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/24 01:07:15 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/24 20:00:40 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,22 @@ char	*get_next_line(int fd)
 	static char	*next;
 	char		*line;
 	char		*ptr;
-	int			read_byte;
+	static int	read_byte;
 
+	read_byte = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = NULL;
 	buff[0] = 0;
+	if (next)
+	{
+		if (!(*next))
+		{
+			free(next);
+			return (line);
+		}
+	}
 	check_endl(&next, &line);
-	read_byte = 1;
 	while (!ft_strchr(line, '\n') || (!line && read_byte))
 	{	
 		read_byte = read(fd, buff, BUFFER_SIZE);
@@ -93,7 +101,9 @@ char	*get_next_line(int fd)
 		if (read_byte == -1)
 			return (NULL);
 		if (read_byte == 0)
+		{		
 			return (line);
+		}
 		ptr = ft_strchr(buff, '\n');
 		if (ptr)
 		{	
@@ -110,23 +120,16 @@ int	main(void)
 	char	*line;
     //int           i = 0;
     int		fd1;
+	int		counter = 1;
 
-	fd1 = open("multiple_nlx5", O_RDONLY);
+	fd1 = open("test.txt", O_RDONLY);  //\n\n
 	if (fd1 == -1)
 		return (0);
-	line = get_next_line(fd1);
-	printf("%s", line);
-	line = get_next_line(fd1);
-	printf("%s", line);
-	line = get_next_line(fd1);
-	printf("%s", line);
-	line = get_next_line(fd1);
-	printf("%s", line);
-	line = get_next_line(fd1);
-	printf("%s", line);
-	line = get_next_line(fd1);
-	printf("%s", line);
+	while (line)
+	{
+		line = get_next_line(fd1);
+		printf("%d %s",counter, line);
+		counter++;
+	}
 	close(fd1);
-	return (0);
-}
-*/
+}*/
