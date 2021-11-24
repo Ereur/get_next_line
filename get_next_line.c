@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:03:11 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/23 00:49:19 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/24 01:07:15 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	check_endl(char **next, char **line)
 		if (c)
 		{
 			*next = ft_strdup(++c);
-			c[1] = '\0';
+			c[0] = '\0';
 			*line = ft_strdup(tmp);
 			free(tmp);
 		}
@@ -56,12 +56,19 @@ void	ft_next_line(char **next, char *ptr)
 void	ft_write_line(char **line, char *buff)
 {
 	char	*tmp;
+	char	*ok;
 
 	tmp = *line;
+	ok = NULL;
 	if (!(*line))
+	{	
 		*line = ft_strdup("");
+		ok = *line;
+	}
 	*line = ft_strjoin(*line, buff);
-	if (tmp != 0)
+	if (ok)
+		free(ok);
+	if (tmp)
 		free(tmp);
 }
 
@@ -83,8 +90,8 @@ char	*get_next_line(int fd)
 	{	
 		read_byte = read(fd, buff, BUFFER_SIZE);
 		buff[read_byte] = '\0';
-		if(read_byte == -1)
-			return NULL;
+		if (read_byte == -1)
+			return (NULL);
 		if (read_byte == 0)
 			return (line);
 		ptr = ft_strchr(buff, '\n');
@@ -97,28 +104,29 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-
+/*
 int	main(void)
 {
 	char	*line;
     //int           i = 0;
     int		fd1;
 
-	fd1 = open("test.txt", O_RDONLY);
-	while (line)
-	{
-		line = get_next_line(fd1);
-		if (!line)
-			break;
-		printf("%s", line);
-	}
-	
-	/*line = get_next_line(fd1);
-	printf("s = %s", line);
+	fd1 = open("multiple_nlx5", O_RDONLY);
+	if (fd1 == -1)
+		return (0);
 	line = get_next_line(fd1);
-	printf("s + %s", line);
-	*/
+	printf("%s", line);
+	line = get_next_line(fd1);
+	printf("%s", line);
+	line = get_next_line(fd1);
+	printf("%s", line);
+	line = get_next_line(fd1);
+	printf("%s", line);
+	line = get_next_line(fd1);
+	printf("%s", line);
+	line = get_next_line(fd1);
+	printf("%s", line);
 	close(fd1);
 	return (0);
 }
-
+*/
