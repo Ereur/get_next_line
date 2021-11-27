@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:20:54 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/22 22:54:58 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/27 17:23:05 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ size_t	ft_strlen(const char *s)
 	while (s[i])
 		i++;
 	return (i);
+}
+
+void	ft_free(char **b)
+{
+	free(*b);
+	*b = NULL;
 }
 
 void	ft_strcpy(char *dst, const char *src, size_t size)

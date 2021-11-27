@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:17:47 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/22 22:29:13 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/27 15:09:54 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *src);
 char	*get_next_line(int fd);
+void	ft_free(char **b);
 
 #endif

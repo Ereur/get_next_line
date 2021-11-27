@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:03:11 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/24 20:00:40 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:39:04 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,12 @@ void	check_endl(char **next, char **line)
 			*next = ft_strdup(++c);
 			c[0] = '\0';
 			*line = ft_strdup(tmp);
-			free(tmp);
+			ft_free(&tmp);
 		}
 		else
 		{
 			*line = ft_strdup(*next);
-			free(*next);
-			*next = NULL;
+			ft_free(next);
 		}
 	}
 }
@@ -44,12 +43,11 @@ void	ft_next_line(char **next, char *ptr)
 {
 	if (*ptr != '\0')
 	{
-		if (*next != 0)
+		if (*next)
 		{
-			free(*next);
-			*next = NULL;
+			ft_free(next);
 		}
-			*next = ft_strdup(ptr);
+		*next = ft_strdup(ptr);
 	}
 }
 
@@ -67,29 +65,31 @@ void	ft_write_line(char **line, char *buff)
 	}
 	*line = ft_strjoin(*line, buff);
 	if (ok)
-		free(ok);
+		ft_free(&ok);
 	if (tmp)
-		free(tmp);
+		ft_free(&tmp);
 }
 
 char	*get_next_line(int fd)
 {
-	char		buff[BUFFER_SIZE + 1];
+	char		*buff;
 	static char	*next;
 	char		*line;
 	char		*ptr;
-	static int	read_byte;
+	int			read_byte;
 
-	read_byte = 1;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0))
 		return (NULL);
+	buff = malloc(BUFFER_SIZE + 1);
+	read_byte = 1;
 	line = NULL;
 	buff[0] = 0;
 	if (next)
 	{
 		if (!(*next))
 		{
-			free(next);
+			ft_free(&buff);
+			ft_free(&next);
 			return (line);
 		}
 	}
@@ -101,7 +101,9 @@ char	*get_next_line(int fd)
 		if (read_byte == -1)
 			return (NULL);
 		if (read_byte == 0)
-		{		
+		{	
+			ft_free(&buff);
+			ft_free(&next);
 			return (line);
 		}
 		ptr = ft_strchr(buff, '\n');
@@ -112,24 +114,32 @@ char	*get_next_line(int fd)
 		}
 		ft_write_line(&line, buff);
 	}
+	ft_free(&buff);
 	return (line);
 }
+
 /*
 int	main(void)
 {
 	char	*line;
     //int           i = 0;
     int		fd1;
-	int		counter = 1;
+	int		count = 1;
 
-	fd1 = open("test.txt", O_RDONLY);  //\n\n
+	fd1 = open("multiple_nlx5", O_RDONLY);  //\n\n
 	if (fd1 == -1)
 		return (0);
 	while (line)
 	{
-		line = get_next_line(fd1);
-		printf("%d %s",counter, line);
-		counter++;
+		line = get_next_line(0);
+		printf("%d %s",count,line);
+		// if (count == 5)
+		// {	system("leaks a.out");
+		// 	exit(1);
+		// }
+		free(line);
+		count++;
 	}
 	close(fd1);
-}*/
+}
+*/
