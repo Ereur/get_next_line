@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:03:11 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/27 23:39:04 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/29 03:10:54 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-void	check_endl(char **next, char **line)
+void	ft_check_endl(char **next, char **line)
 {
 	char	*c;
 	char	*tmp;
@@ -28,6 +28,8 @@ void	check_endl(char **next, char **line)
 		{
 			*next = ft_strdup(++c);
 			c[0] = '\0';
+			if (!(*next[0]))
+				ft_free(next);
 			*line = ft_strdup(tmp);
 			ft_free(&tmp);
 		}
@@ -70,12 +72,23 @@ void	ft_write_line(char **line, char *buff)
 		ft_free(&tmp);
 }
 
+void	ft_check_buff(char **buff, char **next)
+{
+	char	*ptr;
+
+	ptr = ft_strchr(*buff, '\n');
+	if (ptr)
+	{	
+		ft_next_line(next, ++ptr);
+		ptr[0] = '\0';
+	}
+}
+
 char	*get_next_line(int fd)
 {
 	char		*buff;
 	static char	*next;
 	char		*line;
-	char		*ptr;
 	int			read_byte;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0))
@@ -84,62 +97,35 @@ char	*get_next_line(int fd)
 	read_byte = 1;
 	line = NULL;
 	buff[0] = 0;
-	if (next)
-	{
-		if (!(*next))
-		{
-			ft_free(&buff);
-			ft_free(&next);
-			return (line);
-		}
-	}
-	check_endl(&next, &line);
+	ft_check_endl(&next, &line);
 	while (!ft_strchr(line, '\n') || (!line && read_byte))
 	{	
 		read_byte = read(fd, buff, BUFFER_SIZE);
 		buff[read_byte] = '\0';
-		if (read_byte == -1)
-			return (NULL);
 		if (read_byte == 0)
-		{	
-			ft_free(&buff);
-			ft_free(&next);
-			return (line);
-		}
-		ptr = ft_strchr(buff, '\n');
-		if (ptr)
-		{	
-			ft_next_line(&next, ++ptr);
-			ptr[0] = '\0';
-		}
+			break ;
+		ft_check_buff(&buff, &next);
 		ft_write_line(&line, buff);
 	}
 	ft_free(&buff);
 	return (line);
 }
 
-/*
-int	main(void)
-{
-	char	*line;
-    //int           i = 0;
-    int		fd1;
-	int		count = 1;
+// int	main(void)
+// {
+// 	char	*line;
+//     //int           i = 0;
+//     int		fd1;
+// 	int		count = 1;
 
-	fd1 = open("multiple_nlx5", O_RDONLY);  //\n\n
-	if (fd1 == -1)
-		return (0);
-	while (line)
-	{
-		line = get_next_line(0);
-		printf("%d %s",count,line);
-		// if (count == 5)
-		// {	system("leaks a.out");
-		// 	exit(1);
-		// }
-		free(line);
-		count++;
-	}
-	close(fd1);
-}
-*/
+// 	fd1 = open("test", O_RDONLY);  //\n\n
+// 	if (fd1 == -1)
+// 		return (0);
+// 	while (line)
+// 	{
+// 		line = get_next_line(fd1);
+// 		printf("%d %s",count,line);
+// 		count++;
+// 	}
+// 	close(fd1);
+// }
