@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:03:11 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/29 06:48:29 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/11/29 06:50:22 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include"get_next_line_bonus.h"
 
 void	ft_check_endl(char **next, char **line)
 {
@@ -85,7 +85,7 @@ void	ft_check_buff(char **buff, char **next)
 char	*get_next_line(int fd)
 {
 	char		*buff;
-	static char	*next;
+	static char	*next[OPEN_MAX];
 	char		*line;
 	int			read_byte;
 
@@ -95,14 +95,14 @@ char	*get_next_line(int fd)
 	read_byte = 1;
 	line = NULL;
 	buff[0] = 0;
-	ft_check_endl(&next, &line);
+	ft_check_endl(&next[fd], &line);
 	while (!ft_strchr(line, '\n') || (!line && read_byte))
 	{	
 		read_byte = read(fd, buff, BUFFER_SIZE);
 		buff[read_byte] = '\0';
 		if (read_byte == 0)
 			break ;
-		ft_check_buff(&buff, &next);
+		ft_check_buff(&buff, &next[fd]);
 		ft_write_line(&line, buff);
 	}
 	ft_free(&buff);
