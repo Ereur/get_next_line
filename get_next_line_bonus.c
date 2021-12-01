@@ -6,7 +6,7 @@
 /*   By: aamoussa <aamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 21:03:11 by aamoussa          #+#    #+#             */
-/*   Updated: 2021/11/29 06:50:22 by aamoussa         ###   ########.fr       */
+/*   Updated: 2021/12/01 13:26:51 by aamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*get_next_line(int fd)
 	line = NULL;
 	buff[0] = 0;
 	ft_check_endl(&next[fd], &line);
-	while (!ft_strchr(line, '\n') || (!line && read_byte))
+	while (!ft_strchr(line, '\n'))
 	{	
 		read_byte = read(fd, buff, BUFFER_SIZE);
 		buff[read_byte] = '\0';
@@ -116,8 +116,8 @@ char	*get_next_line(int fd)
 //     int		fd1,fd2;
 // 	int		count = 1;
 
-// 	fd1 = open("i", O_RDONLY);  //\n\n
-// 	fd2 = open ("a", O_RDONLY);
+// 	fd1 = open("test", O_RDONLY);  //\n\n
+// 	fd2 = open ("test1", O_RDONLY);
 // 	if (fd1 == -1)
 // 		return (0);
 // 	line = get_next_line(fd1);
